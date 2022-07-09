@@ -1,0 +1,14 @@
+FROM ghcr.io/deamen/cifs/centos9:base
+LABEL maintainer="Song Tang"
+
+LABEL name="cifs/coss9-init"
+LABEL version="9.0.0"
+
+RUN dnf install -y systemd procps-ng --nodocs --setopt install_weak_deps=False && \
+    dnf clean all
+
+CMD ["/sbin/init"]
+
+STOPSIGNAL SIGRTMIN+3
+
+RUN systemctl mask systemd-remount-fs.service dev-hugepages.mount sys-fs-fuse-connections.mount systemd-logind.service getty.target console-getty.service systemd-udev-trigger.service systemd-udevd.service systemd-random-seed.service
