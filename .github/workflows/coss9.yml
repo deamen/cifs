@@ -45,7 +45,7 @@ jobs:
 
       - name: Download and extract CentOS Stream 9 Cloud tarball
         if: ${{ matrix.type == 'base' }}
-        run: curl https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Container-Base-9-20220627.1.x86_64.tar.xz | tar -xJ
+        run: curl https://cloud.centos.org/centos/9-stream/x86_64/images/CentOS-Stream-Container-Base-9-20220627.1.x86_64.tar.xz | tar -xJ -C coss9/
 
       - name: Complete the base image Dockerfile
         if: ${{ matrix.type == 'base' }}
