@@ -49,7 +49,7 @@ jobs:
 
       - name: Complete the base image Dockerfile
         if: ${{ matrix.type == 'base' }}
-        run: find ./ -iname layer.tar -exec echo "ADD {} /" >> coss9/Dockerfile.coss9-base  \;
+        run: cd coss9 && find ./ -iname layer.tar -exec echo "ADD {} /" >> ./Dockerfile.coss9-base  \;
 
       - name: Build the Container image
         run: docker build ./coss9/ --file ./coss9/Dockerfile.coss9-${{ matrix.type }} --tag ${{ env.REGISTRY }}/${{ github.repository }}/coss9-${{ matrix.type }}:${{ github.run_id }}
