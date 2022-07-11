@@ -40,7 +40,7 @@ jobs:
         run: curl -O ${{ env.UPSTREAM_CHEKSUM }}
       
       - name: Download gpg file
-        run: curl -O ${{ env.UPSTREAM_GPG }}}
+        run: curl -O ${{ env.UPSTREAM_GPG }}
 
       - name: Verify the CHECKSUM file
         run: gpgv --keyring ./fedora.gpg *-CHECKSUM
