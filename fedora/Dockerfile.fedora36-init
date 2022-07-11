@@ -3,7 +3,7 @@ LABEL maintainer="Song Tang"
 
 LABEL name="cifs/fedora36-init"
 
-RUN microdnf install -y systemd procps-ng --nodocs --setopt install_weak_deps=False && \
+RUN microdnf install -y systemd procps-ng --nodocs --setopt install_weak_deps=0 && \
     microdnf clean all
 
 CMD ["/sbin/init"]

@@ -1,6 +1,6 @@
 FROM localhost/fedora36:upstream
 LABEL maintainer="Song Tang"
 
-RUN microdnf update -y --nodocs --setopt install_weak_deps=False && \
-    dnf clean all
+RUN microdnf update -y --nodocs --setopt install_weak_deps=0 && \
+    microdnf clean all
 
