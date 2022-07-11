@@ -56,7 +56,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Load the upstream Container image
-        run: docker tag $(docker load ./${{ env.UPSTREAM_IMAGE }} | cut -d' ' -f3) localhost/fedora36:upstream
+        run: docker tag $(docker load --input ./${{ env.UPSTREAM_IMAGE }} | cut -d' ' -f3) localhost/fedora36:upstream
 
       - name: Build the Container image
         run: docker build ./fedora/ --file ./fedora/Dockerfile.fedora36-${{ matrix.type }} --tag ${{ env.REGISTRY }}/${{ github.repository }}/fedora-${{ matrix.type }}:${{ github.run_id }}
