@@ -74,7 +74,7 @@ jobs:
           sarif_file: results.sarif
 
       - name: Tag image for upload
-        run: docker tag ${{ env.REGISTRY }}/${{ github.repository }}/fedora36-${{ matrix.type }}:${{ github.run_id }} ${{ github.repository }}/fedora36:base
+        run: docker tag ${{ env.REGISTRY }}/${{ github.repository }}/fedora36-${{ matrix.type }}:${{ github.run_id }} ${{ env.REGISTRY }}/${{ github.repository }}/fedora36:base
 
       - name: Push the container
         run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/fedora36:base
