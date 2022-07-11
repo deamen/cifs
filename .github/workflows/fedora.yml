@@ -17,8 +17,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  UPSTREAM_URI: "https://dl.fedoraproject.org/pub/fedora/linux/releases/36/Container/x86_64/images/Fedora-Container-Minimal-Base-36-1.5.x86_64.tar.xz"
-  UPSTREAM_IMAGE: "Fedora-Container-Minimal-Base-36-1.5.x86_64.tar.xz"
+  UPSTREAM_URI: "https://dl.fedoraproject.org/pub/fedora/linux/releases/36/Container/x86_64/images/Fedora-Container-Base-36-1.5.x86_64.tar.xz"
+  UPSTREAM_IMAGE: "Fedora-Container-Base-36-1.5.x86_64.tar.xz"
   UPSTREAM_CHEKSUM: "https://dl.fedoraproject.org/pub/fedora/linux/releases/36/Container/x86_64/images/Fedora-Container-36-1.5-x86_64-CHECKSUM"
   UPSTREAM_GPG: "https://getfedora.org/static/fedora.gpg"
 
@@ -55,8 +55,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Import the upstream Container image
-        run: docker import ./${{ env.UPSTREAM_IMAGE }}  localhost/fedora36:upstream
+      - name: Load the upstream Container image
+        run: docker tag $(docker load ./${{ env.UPSTREAM_IMAGE }} | cut -d' ' -f3) localhost/fedora36:upstream
 
       - name: Build the Container image
         run: docker build ./fedora/ --file ./fedora/Dockerfile.fedora36-${{ matrix.type }} --tag ${{ env.REGISTRY }}/${{ github.repository }}/fedora-${{ matrix.type }}:${{ github.run_id }}
