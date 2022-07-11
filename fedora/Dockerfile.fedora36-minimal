@@ -1,0 +1,11 @@
+FROM ghcr.io/deamen/cifs/fedora36:base
+LABEL maintainer="Song Tang"
+
+LABEL name="cifs/fedora36-minimal"
+
+RUN microdnf update -y --nodocs --setopt install_weak_deps=False && \
+    microdnf clean all
+
+CMD ["/bin/bash"]
+
+RUN rm -rf /var/log/*
