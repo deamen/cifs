@@ -59,12 +59,12 @@ jobs:
         run: docker import ./${{ env.UPSTREAM_IMAGE }}  localhost/fedora36:upstream
 
       - name: Build the Container image
-        run: docker build ./fedora/ --file ./fedora/Dockerfile.fedora-${{ matrix.type }} --tag ${{ env.REGISTRY }}/${{ github.repository }}/fedora-${{ matrix.type }}:${{ github.run_id }}
+        run: docker build ./fedora/ --file ./fedora/Dockerfile.fedora36-${{ matrix.type }} --tag ${{ env.REGISTRY }}/${{ github.repository }}/fedora-${{ matrix.type }}:${{ github.run_id }}
 
       - name: Run the Anchore scan action itself with GitHub Advanced Security code scanning integration enabled
         uses: anchore/scan-action@b08527d5ae7f7dc76f9621edb6e49eaf47933ccd
         with:
-          image: "${{ env.REGISTRY }}/${{ github.repository }}/fedora-${{ matrix.type }}:${{ github.run_id }}"
+          image: "${{ env.REGISTRY }}/${{ github.repository }}/fedora36-${{ matrix.type }}:${{ github.run_id }}"
           acs-report-enable: true
           fail-build: true
 
@@ -74,7 +74,7 @@ jobs:
           sarif_file: results.sarif
        
       - name: Push the container
-        run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/fedora-${{ matrix.type }}:${{ github.run_id }}
+        run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/fedora36-${{ matrix.type }}:${{ github.run_id }}
  
   build-scan-push-image:
     runs-on: ubuntu-latest
