@@ -1,4 +1,4 @@
-FROM ghcr.io/deamen/cifs/fedora36:base
+FROM ghcr.io/deamen/cifs/fedora36-base:latest
 LABEL maintainer="Song Tang"
 
 LABEL name="cifs/fedora36-minimal"

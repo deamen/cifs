@@ -85,11 +85,11 @@ jobs:
       - name: Push the image as is
         run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }}
 
-      - name: Tag image as base
-        run: docker tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }} ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}:base
+      - name: Tag image as latest
+        run: docker tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }} ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest
 
       - name: Push the image as base
-        run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}:base
+        run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest
  
   build-scan-push-image:
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
         run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }}
 
       - name: Tag image as latest
-        run: docker tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }} ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}:latest
+        run: docker tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }} ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest
 
       - name: Push the image as latest
-        run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}:latest
+        run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest
