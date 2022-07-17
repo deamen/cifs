@@ -49,11 +49,11 @@ jobs:
         run: curl -O ${{ inputs.tarball_checksum_uri }}/${{ inputs.tarball_checksum_file }}
       
       - name: Download gpg file
-        if: ${{ inputs.tarball_gpg_key != "NA" }}
+        if: ${{ inputs.tarball_gpg_key != 'NA' }}
         run: curl -O ${{ inputs.tarball_gpg_uri }}/${{ inputs.tarball_gpg_key }}
 
       - name: Verify the CHECKSUM file
-        if: ${{ inputs.tarball_gpg_key != "NA" }}
+        if: ${{ inputs.tarball_gpg_key != 'NA' }}
         run: gpgv --keyring ./${{ inputs.tarball_gpg_key }} ${{ inputs.tarball_checksum_file }}
 
       - name: Verify tarball
