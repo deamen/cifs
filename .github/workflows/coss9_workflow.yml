@@ -1,0 +1,27 @@
+name: "CIFS: coss9"
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master" ]
+    paths: 
+       - 'coss9/**'
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  call-cifs-work-flow:
+    uses: ./.github/workflows/cifs_workflow.yml
+    with:
+      distro: coss9
+      registry: ghcr.io
+      tarball: "CentOS-Stream-Container-Base-9-20220627.1.x86_64.tar.xz"
+      tarball_uri: "https://cloud.centos.org/centos/9-stream/x86_64/images"
+      tarball_checksum_uri: "https://cloud.centos.org/centos/9-stream/x86_64/images"
+      tarball_checksum_file: "CentOS-Stream-Container-Base-9-20220627.1.x86_64.tar.xz.SHA256SUM"
+      tarball_gpg_key: "NA"
+      tarball_gpg_uri: "NA"
