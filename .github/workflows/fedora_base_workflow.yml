@@ -1,0 +1,94 @@
+name: Fedora base image workflow
+
+on:
+  workflow_call:
+    inputs:
+      distro:
+        required: true
+        type: string
+      registry:
+        required: true
+        type: string
+      tarball:
+        required: true
+        type: string
+      tarball_uri:
+        required: true
+        type: string
+      tarball_checksum_uri:
+        required: true
+        type: string
+      tarball_checksum_file:
+        required: true
+        type: string
+      tarball_gpg_key:
+        required: true
+        type: string
+      tarball_gpg_uri:
+        required: true
+        type: string
+        
+env:
+  IMG_URI: ${{ inputs.tarball_uri }}/${{ inputs.tarball }}
+
+jobs:
+  build-scan-push-base-image:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type:
+          - base
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download container tarball
+        run: curl -O ${{ env.IMG_URI }}
+
+      - name: Download CHECKSUM file
+        run: curl -O ${{ inputs.tarball_checksum_uri }}/${{ inputs.tarball_checksum_file }}
+      
+      - name: Download gpg file
+        if: ${{ inputs.tarball_gpg_key != 'NA' }}
+        run: curl -O ${{ inputs.tarball_gpg_uri }}/${{ inputs.tarball_gpg_key }}
+
+      - name: Verify the CHECKSUM file
+        if: ${{ inputs.tarball_gpg_key != 'NA' }}
+        run: gpgv --keyring ./${{ inputs.tarball_gpg_key }} ${{ inputs.tarball_checksum_file }}
+
+      - name: Verify tarball
+        run: sha256sum -c ${{ inputs.tarball_checksum_file }} --ignore-missing
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Load the upstream Container image
+        run: docker tag $(docker load --input ./${{ inputs.tarball }} | cut -d' ' -f3) localhost/${{ inputs.distro }}:upstream
+
+      - name: Build the Container image
+        run: docker build ./${{ inputs.distro }}/ --file ./${{ inputs.distro }}/Dockerfile.${{ inputs.distro }}-${{ matrix.type }} --tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }}
+
+      - name: Run the Anchore scan on the image
+        uses: anchore/scan-action@b08527d5ae7f7dc76f9621edb6e49eaf47933ccd
+        with:
+          image: "${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }}"
+          acs-report-enable: true
+          fail-build: true
+
+      - name: Upload Anchore Scan Report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
+
+      - name: Push the image as is
+        run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }}
+
+      - name: Tag image as latest
+        run: docker tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }} ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest
+
+      - name: Push the image as latest
+        run: docker push ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest

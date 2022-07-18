@@ -16,8 +16,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-cifs-work-flow:
-    uses: ./.github/workflows/cifs_workflow.yml
+  build-fedora36-base-image:
+    uses: ./.github/workflows/fedora_base_workflow.yml
     with:
       distro: fedora36
       registry: ghcr.io
@@ -27,3 +27,10 @@ jobs:
       tarball_checksum_file: "Fedora-Container-36-1.5-x86_64-CHECKSUM"
       tarball_gpg_key: "fedora.gpg"
       tarball_gpg_uri: "https://getfedora.org/static"
+ 
+  build-fedora36-init-and-minimal-image:
+    needs: [build-fedora36-base-image]
+    uses: ./.github/workflows/cifs_non_base_workflow.yml
+    with:
+      distro: fedora36
+      registry: ghcr.io
