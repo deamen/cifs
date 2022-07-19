@@ -21,10 +21,10 @@ jobs:
     env:
       distro: coss9
       registry: ghcr.io
-      tarball: "CentOS-Stream-Container-Base-9-20220627.1.x86_64.tar.xz"
+      tarball: "CentOS-Stream-Container-Base-9-20220718.0.x86_64.tar.xz"
       tarball_uri: "https://cloud.centos.org/centos/9-stream/x86_64/images"
       tarball_checksum_uri: "https://cloud.centos.org/centos/9-stream/x86_64/images"
-      tarball_checksum_file: "CentOS-Stream-Container-Base-9-20220627.1.x86_64.tar.xz.SHA256SUM"
+      tarball_checksum_file: "CentOS-Stream-Container-Base-9-20220718.0.x86_64.tar.xz.SHA256SUM"
       tarball_gpg_key: "NA"
       tarball_gpg_uri: "NA"
 
