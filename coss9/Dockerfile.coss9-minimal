@@ -4,7 +4,7 @@ LABEL maintainer="Song Tang"
 LABEL name="cifs/coss9-minimal"
 LABEL version="9.0.0"
 
-RUN dnf update -y --nodocs --setopt install_weak_deps=False && \
+RUN dnf update -y --nodocs --setopt install_weak_deps=0 && \
     dnf clean all
 
 CMD ["/bin/bash"]
