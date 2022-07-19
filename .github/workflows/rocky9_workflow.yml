@@ -1,0 +1,25 @@
+name: "CIFS: rocky9"
+
+on:
+  push:
+    branches: [ "master" ]
+    paths: 
+       - 'rocky9/**'
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+
+jobs:
+  build-rocky9-base-image:
+    uses: ./.github/workflows/cifs_base_workflow.yml
+    with:
+      distro: rocky9
+      registry: ghcr.io
+
+  build-rocky9-init-and-minimal-image:
+    needs: [build-rocky9-base-image]
+    uses: ./.github/workflows/cifs_non_base_workflow.yml
+    with:
+      distro: rocky9
+      registry: ghcr.io
