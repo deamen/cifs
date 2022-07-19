@@ -1,0 +1,25 @@
+name: "CIFS: alma8"
+
+on:
+  push:
+    branches: [ "master" ]
+    paths: 
+       - 'alma8/**'
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+
+jobs:
+  build-alma8-base-image:
+    uses: ./.github/workflows/cifs_base_workflow.yml
+    with:
+      distro: alma8
+      registry: ghcr.io
+
+  build-alma8-init-and-minimal-image:
+    needs: [build-alma8-base-image]
+    uses: ./.github/workflows/cifs_non_base_workflow.yml
+    with:
+      distro: alma8
+      registry: ghcr.io
