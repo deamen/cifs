@@ -1,4 +1,4 @@
-name: CIFS non-base workflow
+name: CIFS base workflow
 
 on:
   workflow_call:
