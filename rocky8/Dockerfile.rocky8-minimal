@@ -1,0 +1,11 @@
+FROM ghcr.io/deamen/cifs/rocky8-base:latest
+LABEL maintainer="Song Tang"
+
+LABEL name="cifs/rocky8-minimal"
+
+RUN microdnf update -y --nodocs --setopt install_weak_deps=0 && \
+    microdnf clean all
+
+CMD ["/bin/bash"]
+
+RUN rm -rf /var/log/*
