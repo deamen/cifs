@@ -1,4 +1,4 @@
-FROM ghcr.io/deamen/cifs/centos9:base
+FROM ghcr.io/deamen/cifs/coss9-base:latest
 LABEL maintainer="Song Tang"
 
 LABEL name="cifs/coss9-minimal"
