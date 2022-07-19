@@ -1,4 +1,4 @@
-FROM FROM ghcr.io/deamen/cifs/rocky8-base:latest
+FROM ghcr.io/deamen/cifs/rocky8-base:latest
 LABEL maintainer="Song Tang"
 
 LABEL name="cifs/rocky8-minimal"
