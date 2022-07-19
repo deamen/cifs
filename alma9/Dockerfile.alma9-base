@@ -1,0 +1,9 @@
+FROM docker.io/library/almalinux:9 AS builder
+RUN mkdir /rootfs/
+RUN dnf install --installroot /rootfs/ --releasever 9 --setopt install_weak_deps=0 --nodocs -y \
+    microdnf almalinux-release bash
+RUN rm -rf /rootfs/var/cache/dnf/*
+
+FROM scratch
+
+COPY --from=builder /rootfs/ /
