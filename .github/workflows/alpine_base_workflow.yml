@@ -80,7 +80,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the Container image
-        run: docker build ./${{ inputs.distro }}/ --file ./${{ inputs.distro }}/Dockerfile.${{ inputs.distro }}-${{ matrix.type }} --tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }} --tag${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest
+        run: docker build ./${{ inputs.distro }}/ --file ./${{ inputs.distro }}/Dockerfile.${{ inputs.distro }}-${{ matrix.type }} --tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }} --tag ${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:latest
 
       - name: Run the Anchore scan on the image
         uses: anchore/scan-action@b08527d5ae7f7dc76f9621edb6e49eaf47933ccd
