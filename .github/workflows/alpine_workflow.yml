@@ -17,7 +17,7 @@ on:
 
 jobs:
   build-alpine-base-image:
-    uses: ./.github/workflows/fedora_base_workflow.yml
+    uses: ./.github/workflows/alpine_base_workflow.yml
     with:
       distro: alpine
       registry: ghcr.io
