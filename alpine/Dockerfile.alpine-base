@@ -1,0 +1,10 @@
+FROM scratch AS builder
+LABEL maintainer="Song Tang"
+
+ADD alpine.tar.gz /
+
+FROM builder
+LABEL maintainer="Song Tang"
+
+RUN apk update && apk upgrade --no-cache
+
