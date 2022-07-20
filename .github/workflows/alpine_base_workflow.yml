@@ -70,7 +70,7 @@ jobs:
         run: gpg --verify ./${{ inputs.tarball_signature }} ${{ inputs.tarball }}
 
       - name: Rename alpine tarball
-        run: mv ${{ inputs.tarball }} alpine.tar.gz
+        run: mv ${{ inputs.tarball }}  ${{ inputs.distro }}/alpine.tar.gz
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
