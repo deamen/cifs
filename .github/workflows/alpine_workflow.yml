@@ -27,7 +27,7 @@ jobs:
       tarball_checksum_file: "alpine-minirootfs-3.16.1-x86_64.tar.gz.sha256"
       tarball_gpg_key: "ncopa.asc"
       tarball_gpg_uri: "https://alpinelinux.org/keys"
-      tarball_signaturer: "alpine-minirootfs-3.16.1-x86_64.tar.gz.asc"
+      tarball_signature: "alpine-minirootfs-3.16.1-x86_64.tar.gz.asc"
       tarball_siganature_uri: "https://dl-cdn.alpinelinux.org/alpine/v3.16/releases/x86_64"
  
   build-alpine-init-and-minimal-image:
