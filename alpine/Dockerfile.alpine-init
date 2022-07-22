@@ -1,7 +1,6 @@
 FROM ghcr.io/deamen/cifs/alpine-base:latest
 LABEL maintainer="Song Tang"
 
-RUN apk update && apk upgrade --no-cache
+RUN apk update && apk add --no-cache openrc && apk upgrade --no-cache
 
-CMD ["/bin/sh"]
 
