@@ -37,7 +37,7 @@ jobs:
         with:
           image: "${{ inputs.registry }}/${{ github.repository }}/${{ inputs.distro }}-${{ matrix.type }}:${{ github.run_id }}"
           acs-report-enable: true
-          fail-build: true
+          fail-build: false
 
       - name: Upload Anchore Scan Report
         uses: github/codeql-action/upload-sarif@v2
