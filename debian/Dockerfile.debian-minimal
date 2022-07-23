@@ -1,0 +1,12 @@
+FROM ghcr.io/deamen/cifs/debian-base:latest
+LABEL maintainer="Song Tang"
+
+LABEL name="cifs/debian-minimal"
+
+RUN apt-get update && \
+    apt-get upgrade && \
+    apt-get clean
+
+CMD ["/bin/bash"]
+
+RUN rm -rf /var/log/*
