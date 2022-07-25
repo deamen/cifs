@@ -1,4 +1,4 @@
-name: "CIFS: coss9-freeIPA"
+name: "CIFS: coss9-freeipa"
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-coss9-base-image:
+  build-coss9-freeipa-image:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
