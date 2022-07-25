@@ -19,7 +19,7 @@ jobs:
     env:
       distro: coss9
       app: freeIPA
-      app_repo: https://github.com/freeipa/freeipa-container.git
+      app_repo: freeipa/freeipa-container
       dockerfile: Dockerfile.centos-9-stream
       registry: ghcr.io
 
