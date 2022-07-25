@@ -13,8 +13,6 @@ on:
 jobs:
   build-coss9-freeipa-image:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
 
     env:
       distro: coss9
@@ -32,7 +30,7 @@ jobs:
           path: ${{ env.app  }}
 
       - name: Use coss9-init as base image
-        run: sed -i 's/^FROM.*/FROM\ ghcr.io\/deamen\/cifs\/coss9-init:latest/g' ./${{ env.dockerfile  }}
+        run: sed -i 's/^FROM.*/FROM\ ghcr.io\/deamen\/cifs\/coss9-init:latest/g' ./${{ env.app_repo }}/${{ env.dockerfile  }}
 
       - name: Build the ${{ env.distro  }}-${{ env.app  }} image
         run: docker build ./${{ env.app  }} --file ./${{ env.app  }}/${{ env.dockerfile  }} --tag ${{ env.registry }}/${{ github.repository }}/${{ env.distro  }}-${{ env.app }}:${{ github.run_id }} --tag ${{ env.registry }}/${{ github.repository }}/${{ env.distro  }}-${{ env.app }}:latest
