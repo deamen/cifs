@@ -28,7 +28,7 @@ jobs:
         with:
           repository: ${{ env.app_repo }}
 
-      - name: Use coss9-init as base image:
+      - name: Use coss9-init as base image
         run: sed -i 's/^FROM.*/FROM\ ghcr.io\/deamen\/cifs\/coss9-init:latest/g' ./${{ env.dockerfile  }}
 
       - name: Build the ${{ env.distro  }}-${{ env.app  }} image
