@@ -42,7 +42,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run the Anchore scan
-        uses: anchore/scan-action@b08527d5ae7f7dc76f9621edb6e49eaf47933ccd
+        uses: anchore/scan-action@ecfd0e98932e57ea8f68f29c4f418fc41a8194db #v3.2.5
         with:
           image: "${{ env.registry }}/${{ github.repository }}/${{ env.distro  }}-${{ env.app }}:${{ github.run_id }}"
           acs-report-enable: true
