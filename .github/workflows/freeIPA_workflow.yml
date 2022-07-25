@@ -25,14 +25,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b #v3.0.2
+
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b #v3.0.2
         with:
           repository: ${{ env.app_repo }}
+          path: ${{ env.app  }}
 
       - name: Use coss9-init as base image
         run: sed -i 's/^FROM.*/FROM\ ghcr.io\/deamen\/cifs\/coss9-init:latest/g' ./${{ env.dockerfile  }}
 
       - name: Build the ${{ env.distro  }}-${{ env.app  }} image
-        run: docker build . --file ./${{ env.dockerfile  }} --tag ${{ env.registry }}/${{ github.repository }}/${{ env.distro  }}-${{ env.app }}:${{ github.run_id }} --tag ${{ env.registry }}/${{ github.repository }}/${{ env.distro  }}-${{ env.app }}:latest
+        run: docker build ./${{ env.app  }} --file ./${{ env.app  }}/${{ env.dockerfile  }} --tag ${{ env.registry }}/${{ github.repository }}/${{ env.distro  }}-${{ env.app }}:${{ github.run_id }} --tag ${{ env.registry }}/${{ github.repository }}/${{ env.distro  }}-${{ env.app }}:latest
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
