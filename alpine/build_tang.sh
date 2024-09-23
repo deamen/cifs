@@ -3,13 +3,25 @@
 # Exit on error
 set -e
 
-# Set variables for version numbers
-ALPINE_VERSION=3.20.3
-JOSE_VERSION=14
-TANG_VERSION=15
+# Set default environment variables if not provided
+ALPINE_VERSION=${ALPINE_VERSION:-3.20.3}
+JOSE_VERSION=${JOSE_VERSION:-14}
+TANG_VERSION=${TANG_VERSION:-15}
+ARCH=${ARCH:-amd64}
+IMAGE_NAME=${IMAGE_NAME:-nbde-tang-server}
 
-# Create the base builder container using the Alpine version variable
-builder=$(buildah from alpine:$ALPINE_VERSION)
+# Download and set up qemu for cross-arch builds
+VER="v7.2.0-1"
+mkdir -p bin/
+wget -c https://github.com/multiarch/qemu-user-static/releases/download/${VER}/qemu-aarch64-static -P bin/
+chmod a+x bin/*
+
+# Create the base builder container using the provided architecture
+echo "Building for architecture: $ARCH"
+builder=$(buildah from --arch $ARCH alpine:$ALPINE_VERSION)
+
+# Copy qemu-static into the container for cross-compilation support
+buildah copy $builder ./bin/qemu-aarch64-static /usr/bin/
 
 # Install necessary build dependencies, including xz for extracting .tar.xz files
 buildah run $builder -- apk add --no-cache --update \
@@ -43,7 +55,15 @@ buildah run $builder -- sh -c "cd /tmp && sha256sum -c tang-$TANG_VERSION.tar.xz
 buildah run $builder -- sh -c "cd /tmp && tar -xf tang-$TANG_VERSION.tar.xz && cd tang-$TANG_VERSION && mkdir build && cd build && meson .. --prefix=/usr/local && ninja install"
 
 # Create the final container image using the Alpine version variable
-final=$(buildah from alpine:$ALPINE_VERSION)
+final=$(buildah from --arch $ARCH alpine:$ALPINE_VERSION)
+
+# Install only the runtime dependencies in the final container
+buildah run $final -- apk add --no-cache --update \
+    http-parser \
+    jansson \
+    openssl \
+    wget \
+    zlib
 
 # Copy the built JOSE and Tang binaries from the builder container to the final container
 buildah copy --from=$builder $final /usr/local/bin/jose /usr/local/bin/
@@ -53,14 +73,6 @@ buildah copy --from=$builder $final /usr/local/libexec/tangd-rotate-keys /usr/lo
 buildah copy --from=$builder $final /usr/local/bin/tang-show-keys /usr/local/bin/
 buildah copy --from=$builder $final /usr/local/lib/libjose.so* /usr/local/lib/
 
-# Install runtime dependencies in the final container
-buildah run $final -- apk add --no-cache --update \
-    http-parser \
-    jansson \
-    openssl \
-    wget \
-    zlib
-
 # Expose the new Tang port (7500) and configure a volume for the database
 buildah config --port 7500 $final
 buildah config --volume /db $final
@@ -68,5 +80,5 @@ buildah config --volume /db $final
 # Directly run the Tang server in standalone mode (listening on port 7500)
 buildah config --cmd '["tangd", "-l", "-p", "7500", "/db"]' $final
 
-# Commit the final image with the new name
-buildah commit $final nbde-tang-server
+# Commit the final image with the architecture included in the name
+buildah commit $final ${IMAGE_NAME}-$ARCH
