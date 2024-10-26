@@ -66,6 +66,8 @@ buildah run $final_image adduser -S -G ${NAME} ${NAME}
 # location.
 buildah run $final_image mkdir -p /vault/logs
 buildah run $final_image mkdir -p /vault/file
+buildah run $final_image mkdir -p /vault/data
+buildah run $final_image mkdir -p /vault/tls
 buildah run $final_image mkdir -p /vault/config
 buildah run $final_image chown -R ${NAME}:${NAME} /vault
 
