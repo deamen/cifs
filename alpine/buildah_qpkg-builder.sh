@@ -44,15 +44,16 @@ buildah copy --from="$builder" "$final" /usr/share/QDK /usr/share/QDK
 buildah copy --from="$builder" "$final" /bin/qpkg_encrypt /bin/qpkg_encrypt
 buildah copy --from="$builder" "$final" /etc/config /etc/config
 
-# Set workdir
+# Retrieve and update PATH for the final image
+IMAGEPATH=$(buildah run "$final" printenv PATH)
+buildah config --env PATH="/usr/share/QDK/bin:${IMAGEPATH}" "$final"
+
+# Set QDK_SIGNATURE environment variable
+buildah config --env QDK_SIGNATURE="gpg" "$final"
+
+# Set workdir and entrypoint to allow passing options
 buildah config --workingdir /SRC "$final"
-
-# Append PATH and QDK_SIGNATURE to ~/.bashrc in the final image
-buildah run "$final" -- bash -c 'echo "PATH=\$PATH:/usr/share/QDK/bin" >> ~/.bashrc'
-buildah run "$final" -- bash -c 'echo "export QDK_SIGNATURE=gpg" >> ~/.bashrc'
-
-# Source ~/.bashrc before running CMD
-buildah config --cmd '["bash", "-c", "source ~/.bashrc && /usr/share/QDK/bin/qbuild"]' "$final"
+buildah config --entrypoint '["/usr/share/QDK/bin/qbuild"]' "$final"
 
 # Add labels
 buildah config --label org.opencontainers.image.version="v${QDK_VERSION}" "$final"
