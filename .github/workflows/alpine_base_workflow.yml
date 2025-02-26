@@ -22,10 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.6
 
-      - name: Run setup-qemu-static action
-        uses: deamen/gh-actions/setup-qemu-static@master
+      - name: Setup buildah
+        uses: deamen/gh-actions/setup-buildah@master
         with:
-          targets: 'aarch64'
+          os: 'ubuntu'
 
       - name: Install buildah
         run: |
