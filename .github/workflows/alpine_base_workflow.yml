@@ -15,10 +15,6 @@ on:
 jobs:
   build-push-base-image:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [amd64, arm64]
     env:
       ALPINE_VERSION: 3.21.3
     steps:
@@ -34,9 +30,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y buildah qemu-user-static
 
-      - name: Build Alpine base image
+      - name: Build Alpine base image for amd64
         run: |
-          ARCH=${{ matrix.arch }} ./alpine/buildah_alpine-base.sh
+          ARCH=amd64 ./alpine/buildah_alpine-base.sh
+
+      - name: Build Alpine base image for arm64
+        run: |
+          ARCH=arm64 ./alpine/buildah_alpine-base.sh
 
       - name: Log in to the Container registry with buildah
         run: |
