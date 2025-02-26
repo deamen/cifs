@@ -6,13 +6,16 @@ on:
       - master
     paths:
       - 'alpine/**'
-      - '.github/workflows/alpine_base_workflow.yml'
+      - '.github/workflows/alpine_workflow.yml'
   pull_request:
     branches:
       - master
     paths:
       - 'alpine/**'
-      - '.github/workflows/alpine_base_workflow.yml'
+      - '.github/workflows/alpine_workflow.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * 0'
 
 jobs:
   build-push-base-image:
