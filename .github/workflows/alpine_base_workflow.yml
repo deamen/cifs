@@ -6,11 +6,13 @@ on:
       - master
     paths:
       - 'alpine/**'
+      - '.github/workflows/alpine_base_workflow.yml'
   pull_request:
     branches:
       - master
     paths:
       - 'alpine/**'
+      - '.github/workflows/alpine_base_workflow.yml'
 
 jobs:
   build-push-base-image:
