@@ -10,18 +10,9 @@ TANG_VERSION=${TANG_VERSION:-15}
 ARCH=${ARCH:-amd64}
 IMAGE_NAME=${IMAGE_NAME:-nbde-tang-server}
 
-# Download and set up qemu for cross-arch builds
-VER="v7.2.0-1"
-mkdir -p bin/
-wget -c https://github.com/multiarch/qemu-user-static/releases/download/${VER}/qemu-aarch64-static -P bin/
-chmod a+x bin/*
-
 # Create the base builder container using the provided architecture
-echo "Building for architecture: $ARCH"
+echo -e "\n Building for architecture: $ARCH \n"
 builder=$(buildah from --arch $ARCH alpine:$ALPINE_VERSION)
-
-# Copy qemu-static into the container for cross-compilation support
-buildah copy $builder ./bin/qemu-aarch64-static /usr/bin/
 
 # Install necessary build dependencies, including xz for extracting .tar.xz files
 buildah run $builder -- apk add --no-cache --update \
