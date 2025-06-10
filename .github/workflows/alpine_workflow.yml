@@ -21,7 +21,7 @@ jobs:
   build-push-base-image:
     runs-on: ubuntu-latest
     env:
-      ALPINE_VERSION: 3.21.3
+      ALPINE_VERSION: 3.22.0
     steps:
       - uses: actions/checkout@v4.1.6
 
