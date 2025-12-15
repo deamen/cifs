@@ -1,23 +1,30 @@
 #!/bin/bash
+set -e
 
-# Set default architecture to amd64 if not provided
-ARCH=${ARCH:-amd64}
+source ./alpine_vars.sh
+IMAGE_NAME=${IMAGE_NAME:-${REGISTRY_URL}/alpine-minimal-${ARCH}}
 
 # Create a new container from the alpine-base image with specified architecture
-ctr=$(buildah from --arch $ARCH quay.io/deamen/alpine-base:latest)
+ctr=${BASE_CONTAINER}
 
-# Set the maintainer label
-buildah config --label maintainer="Song Tang" $ctr
+set_maintainer_label $ctr
 
-# Update and upgrade the Alpine packages
-buildah run $ctr apk update
-buildah run $ctr apk upgrade --no-cache
+update_and_upgrade_packages $ctr
+
+buildah run $ctr adduser --disabled-password ${MAINTAINER}
+buildah run $ctr apk add --no-cache doas
+
+# Allow the default user to execute commands as root using doas
+buildah run $ctr sh -c "echo 'permit nopass ${MAINTAINER} as root' > /etc/doas.d/${MAINTAINER}.conf"
+
+# Set the default user and working directory for the container
+buildah config --user ${MAINTAINER} $ctr
+buildah config --workingdir /home/${MAINTAINER} $ctr
 
 # Set the default command for the container
 buildah config --cmd "/bin/sh" $ctr
 
-# Commit the container to an image with squashing layers
-buildah commit --squash $ctr quay.io/deamen/alpine-minimal-${ARCH}
+commit_and_squash $ctr ${IMAGE_NAME}
 
 # Remove the container after committing the image
 buildah rm $ctr
