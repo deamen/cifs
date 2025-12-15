@@ -1,8 +1,8 @@
 ARCH=${ARCH:-amd64}
 BASE_IMAGE="quay.io/deamen/alpine-base:latest"
 MINIMAL_IMAGE="quay.io/deamen/alpine-minimal:latest"
-MINIMAL_CONTAINER=$(buildah from --arch "${ARCH}" "${MINIMAL_IMAGE}")
-BASE_CONTAINER=$(buildah from --arch "${ARCH}" "${BASE_IMAGE}")
+MINIMAL_CONTAINER="buildah from --arch $ARCH $MINIMAL_IMAGE"
+BASE_CONTAINER="buildah from --arch $ARCH $BASE_IMAGE"
 MAINTAINER="deamen"
 REGISTRY_URL="quay.io/deamen"
 
