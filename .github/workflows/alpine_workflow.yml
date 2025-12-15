@@ -30,11 +30,6 @@ jobs:
         with:
           os: 'ubuntu'
 
-      - name: Install buildah
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y buildah qemu-user-static
-
       - name: Build Alpine base image for amd64
         run: |
           ARCH=amd64 ./alpine/buildah_alpine-base.sh
@@ -50,6 +45,37 @@ jobs:
           --password ${{ secrets.REGISTRY_PASSWORD }} \
           ${{ vars.REGISTRY_SERVER }}
 
-      - name: Create and push multi-arch manifest
+      - name: Create and push multi-arch manifest for base image
         run: |
           ./alpine/buildah_multiarch.sh quay.io/deamen/alpine-base
+
+  build-push-minimal-image:
+    needs: build-push-base-image
+    runs-on: ubuntu-latest
+    env:
+      ALPINE_VERSION: 3.22.0
+    steps:
+      - uses: actions/checkout@v4.1.6
+
+      - name: Setup buildah
+        uses: deamen/gh-actions/setup-buildah@master
+        with:
+          os: 'ubuntu'
+      - name: Build Alpine minimal image for amd64
+        run: |
+          ARCH=amd64 ./alpine/buildah_alpine-minimal.sh
+
+      - name: Build Alpine minimal image for arm64
+        run: |
+          ARCH=arm64 ./alpine/buildah_alpine-minimal.sh
+
+      - name: Log in to the Container registry with buildah
+        run: |
+          buildah login \
+          --username ${{ vars.REGISTRY_USERNAME }} \
+          --password ${{ secrets.REGISTRY_PASSWORD }} \
+          ${{ vars.REGISTRY_SERVER }}
+
+      - name: Create and push multi-arch manifest for minimal image
+        run: |
+          ./alpine/buildah_multiarch.sh quay.io/deamen/alpine-minimal
