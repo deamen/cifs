@@ -5,7 +5,7 @@ source "$(dirname "$0")/alpine_vars.sh"
 IMAGE_NAME=${IMAGE_NAME:-${REGISTRY_URL}/alpine-minimal-${ARCH}}
 
 # Create a new container from the alpine-base image with specified architecture
-ctr=$(${BASE_CONTAINER})
+ctr=$(eval "$BASE_CONTAINER")
 
 set_maintainer_label $ctr
 
