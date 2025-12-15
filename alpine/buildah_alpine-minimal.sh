@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-source ./alpine_vars.sh
+source "$(dirname "$0")/alpine_vars.sh"
 IMAGE_NAME=${IMAGE_NAME:-${REGISTRY_URL}/alpine-minimal-${ARCH}}
 
 # Create a new container from the alpine-base image with specified architecture
