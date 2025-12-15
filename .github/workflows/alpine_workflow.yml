@@ -61,6 +61,14 @@ jobs:
         uses: deamen/gh-actions/setup-buildah@master
         with:
           os: 'ubuntu'
+          
+      - name: Log in to the Container registry with buildah
+        run: |
+          buildah login \
+          --username ${{ vars.REGISTRY_USERNAME }} \
+          --password ${{ secrets.REGISTRY_PASSWORD }} \
+          ${{ vars.REGISTRY_SERVER }}
+        
       - name: Build Alpine minimal image for amd64
         run: |
           ARCH=amd64 ./alpine/buildah_alpine-minimal.sh
@@ -68,13 +76,6 @@ jobs:
       - name: Build Alpine minimal image for arm64
         run: |
           ARCH=arm64 ./alpine/buildah_alpine-minimal.sh
-
-      - name: Log in to the Container registry with buildah
-        run: |
-          buildah login \
-          --username ${{ vars.REGISTRY_USERNAME }} \
-          --password ${{ secrets.REGISTRY_PASSWORD }} \
-          ${{ vars.REGISTRY_SERVER }}
 
       - name: Create and push multi-arch manifest for minimal image
         run: |
