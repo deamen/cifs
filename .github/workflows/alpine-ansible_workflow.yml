@@ -1,4 +1,4 @@
-name: Alpine image workflow
+name: Alpine Ansible image workflow
 
 on:
   push:
