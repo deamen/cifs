@@ -1,0 +1,51 @@
+name: Alpine image workflow
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'alpine/**'
+      - '.github/workflows/alpine_workflow.yml'
+      - '.github/workflows/alpine-ansible_workflow.yml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'alpine/**'
+      - '.github/workflows/alpine_workflow.yml'
+      - '.github/workflows/alpine-ansible_workflow.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 0'
+
+jobs:
+  build-push-ansible-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.6
+
+      - name: Setup buildah
+        uses: deamen/gh-actions/setup-buildah@master
+        with:
+          os: 'ubuntu'
+
+      - name: Build Alpine ansible image for amd64
+        run: |
+          ARCH=amd64 ./alpine/buildah_alpine-ansible.sh
+
+      - name: Build Alpine ansible image for arm64
+        run: |
+          ARCH=arm64 ./alpine/buildah_alpine-ansible.sh
+
+      - name: Log in to the Container registry with buildah
+        run: |
+          buildah login \
+          --username ${{ vars.REGISTRY_USERNAME }} \
+          --password ${{ secrets.REGISTRY_PASSWORD }} \
+          ${{ vars.REGISTRY_SERVER }}
+
+      - name: Create and push multi-arch manifest for ansible image
+        run: |
+          ./alpine/buildah_multiarch.sh quay.io/deamen/alpine-ansible
+
