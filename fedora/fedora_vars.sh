@@ -59,5 +59,5 @@ configure_git_prompt() {
     echo "Configuring git prompt in container $1 ..."
     local ctr="$1"
     buildah copy "$ctr" "$(dirname "$0")/files/load_git-prompt.sh" /etc/profile.d/load_git-prompt.sh
-    buildah run "$ctr" doas chmod 0644 /etc/profile.d/load_git-prompt.sh
+    buildah run "$ctr" chmod 0644 /etc/profile.d/load_git-prompt.sh
 }
