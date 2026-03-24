@@ -1,23 +1,21 @@
-name: Alpine Ansible image workflow
+name: Fedora Ansible image workflow
 
 on:
   push:
     branches:
       - master
     paths:
-      - 'alpine/**'
-      - '.github/workflows/alpine_workflow.yml'
-      - '.github/workflows/alpine-ansible_workflow.yml'
+      - 'fedora/**'
+      - '.github/workflows/fedora-ansible_workflow.yml'
   pull_request:
     branches:
       - master
     paths:
-      - 'alpine/**'
-      - '.github/workflows/alpine_workflow.yml'
-      - '.github/workflows/alpine-ansible_workflow.yml'
+      - 'fedora/**'
+      - '.github/workflows/fedora-ansible_workflow.yml'
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * 0'
+    - cron: '0 3 * * 0'
 
 jobs:
   build-push-ansible-image:
@@ -30,13 +28,13 @@ jobs:
         with:
           os: 'ubuntu'
 
-      - name: Build Alpine ansible image for amd64
+      - name: Build Fedora ansible image for amd64
         run: |
-          ARCH=amd64 ./alpine/buildah_alpine-ansible.sh
+          ARCH=amd64 ./fedora/buildah_fedora-ansible.sh
 
-      - name: Build Alpine ansible image for arm64
+      - name: Build Fedora ansible image for arm64
         run: |
-          ARCH=arm64 ./alpine/buildah_alpine-ansible.sh
+          ARCH=arm64 ./fedora/buildah_fedora-ansible.sh
 
       - name: Log in to the Container registry with buildah
         run: |
@@ -47,5 +45,4 @@ jobs:
 
       - name: Create and push multi-arch manifest for ansible image
         run: |
-          ./helper_scripts/buildah_multiarch.sh quay.io/deamen/alpine-ansible
-
+          ./helper_scripts/buildah_multiarch.sh quay.io/deamen/fedora-ansible
