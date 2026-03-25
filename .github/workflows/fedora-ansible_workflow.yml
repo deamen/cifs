@@ -6,12 +6,14 @@ on:
       - master
     paths:
       - 'fedora/**'
+      - 'helper_scripts/buildah_multiarch.sh'
       - '.github/workflows/fedora-ansible_workflow.yml'
   pull_request:
     branches:
       - master
     paths:
       - 'fedora/**'
+      - 'helper_scripts/buildah_multiarch.sh'
       - '.github/workflows/fedora-ansible_workflow.yml'
   workflow_dispatch:
   schedule:
