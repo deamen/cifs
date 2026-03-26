@@ -1,0 +1,50 @@
+name: Fedora Molecule image workflow
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'fedora/**'
+      - 'helper_scripts/buildah_multiarch.sh'
+      - '.github/workflows/fedora-molecule_workflow.yml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'fedora/**'
+      - 'helper_scripts/buildah_multiarch.sh'
+      - '.github/workflows/fedora-molecule_workflow.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 0'
+
+jobs:
+  build-push-molecule-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.6
+
+      - name: Setup buildah
+        uses: deamen/gh-actions/setup-buildah@master
+        with:
+          os: 'ubuntu'
+
+      - name: Build Fedora molecule image for amd64
+        run: |
+          ARCH=amd64 ./fedora/buildah_fedora-molecule.sh
+
+      - name: Build Fedora molecule image for arm64
+        run: |
+          ARCH=arm64 ./fedora/buildah_fedora-molecule.sh
+
+      - name: Log in to the Container registry with buildah
+        run: |
+          buildah login \
+          --username ${{ vars.REGISTRY_USERNAME }} \
+          --password ${{ secrets.REGISTRY_PASSWORD }} \
+          ${{ vars.REGISTRY_SERVER }}
+
+      - name: Create and push multi-arch manifest for molecule image
+        run: |
+          ./helper_scripts/buildah_multiarch.sh quay.io/deamen/fedora-molecule
