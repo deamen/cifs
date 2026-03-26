@@ -17,7 +17,7 @@ on:
       - '.github/workflows/fedora-init_workflow.yml'
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * 0'
+    - cron: '0 2 * * 0'
 
 jobs:
   build-push-init-image:
