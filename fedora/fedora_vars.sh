@@ -1,8 +1,10 @@
 ARCH=${ARCH:-amd64}
 BASE_IMAGE="registry.fedoraproject.org/fedora:latest"
+INIT_IMAGE="quay.io/deamen/fedora-init:latest"
 MINIMAL_IMAGE="registry.fedoraproject.org/fedora-minimal:latest"
 MINIMAL_CONTAINER="buildah from --arch $ARCH $MINIMAL_IMAGE"
 BASE_CONTAINER="buildah from --arch $ARCH $BASE_IMAGE"
+INIT_CONTAINER="buildah from --arch $ARCH $INIT_IMAGE"
 MAINTAINER="deamen"
 REGISTRY_URL="quay.io/deamen"
 
