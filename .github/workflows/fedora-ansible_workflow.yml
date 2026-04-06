@@ -23,14 +23,17 @@ jobs:
   build-push-ansible-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout this repository
+        uses: actions/checkout@v5
+        with:
+          path: Prj/cifs
 
       - name: Checkout deamen/ansible repo
         uses: actions/checkout@v5
         with:
           repository: deamen/ansible
           token: ${{ secrets.ANSIBLE_CIFS_PAT }}
-          path: ansible
+          path: Prj/ansible
           ref: master
 
       - name: Setup buildah
@@ -41,10 +44,12 @@ jobs:
       - name: Build Fedora ansible image for amd64
         run: |
           ARCH=amd64 ./fedora/buildah_fedora-ansible.sh
+        working-directory: Prj/cifs
 
       - name: Build Fedora ansible image for arm64
         run: |
           ARCH=arm64 ./fedora/buildah_fedora-ansible.sh
+        working-directory: Prj/cifs
 
       - name: Log in to the Container registry with buildah
         run: |
@@ -56,3 +61,4 @@ jobs:
       - name: Create and push multi-arch manifest for ansible image
         run: |
           ./helper_scripts/buildah_multiarch.sh quay.io/deamen/fedora-ansible
+        working-directory: Prj/cifs
