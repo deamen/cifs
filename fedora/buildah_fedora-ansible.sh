@@ -17,9 +17,6 @@ add_packages $ctr ${ANSIBLE_PACKAGES}
 buildah run "$ctr" sh -c "echo 'export PATH=\$PATH:~/.local/bin' > /etc/profile.d/user_home_local_bin.sh"
 buildah run "$ctr" chmod 0644 /etc/profile.d/user_home_local_bin.sh
 
-install_pipx_packages $ctr ${ANSIBLE_PIP_PACKAGES}
-configure_git_prompt $ctr
-
 # Create default user and allow passwordless sudo
 buildah run "$ctr" useradd -m ${MAINTAINER}
 buildah run "$ctr" sh -c "echo '${MAINTAINER} ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/${MAINTAINER}"
@@ -28,6 +25,12 @@ buildah run "$ctr" chmod 0440 /etc/sudoers.d/${MAINTAINER}
 # Set the default user and working directory for the container
 buildah config --user ${MAINTAINER} "$ctr"
 buildah config --workingdir /home/${MAINTAINER} "$ctr"
+
+prepare_ansible_project_in_container "$ctr"
+
+buildah run "$ctr" sh -c "source /etc/profile.d/user_home_local_bin.sh && cd Prj/ansible && ansible-playbook -i localhost, playbooks/configure_ansible_development_env.yml --limit localhost --connection local"
+
+buildah run "$ctr" rm -rf /home/${MAINTAINER}/Prj/ansible
 
 # Set the default command to login shell
 set_default_cmd $ctr "/bin/bash --login"
