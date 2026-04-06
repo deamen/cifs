@@ -5,14 +5,18 @@ on:
     branches:
       - master
     paths:
-      - 'fedora/**'
+      - 'fedora/buildah_fedora-init.sh'
+      - 'fedora/buildah_fedora-molecule.sh'
+      - 'fedora/fedora_vars.sh'
       - 'helper_scripts/buildah_multiarch.sh'
       - '.github/workflows/fedora-molecule_workflow.yml'
   pull_request:
     branches:
       - master
     paths:
-      - 'fedora/**'
+      - 'fedora/buildah_fedora-init.sh'
+      - 'fedora/buildah_fedora-molecule.sh'
+      - 'fedora/fedora_vars.sh'
       - 'helper_scripts/buildah_multiarch.sh'
       - '.github/workflows/fedora-molecule_workflow.yml'
   workflow_dispatch:
