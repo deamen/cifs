@@ -27,6 +27,8 @@ buildah config --user ${MAINTAINER} "$ctr"
 buildah config --workingdir /home/${MAINTAINER} "$ctr"
 
 # Fix sudo PAM account management for container environments (e.g. GitHub Actions)
+# In GitHub Actions, PAM's account management (pam_unix.so) can't resolve user info in the container environment, causing sudo to fail even with a NOPASSWD sudoers entry.
+# This is only reqruied in github actions runners, may not need this in self-hosted runners
 buildah run --user root "$ctr" sh -c 'printf "#%%PAM-1.0\nauth       include      system-auth\naccount    sufficient   pam_permit.so\nsession    optional     pam_keyinit.so revoke\nsession    required     pam_limits.so\n" > /etc/pam.d/sudo'
 
 echo "Preparing Ansible project in the container..."
