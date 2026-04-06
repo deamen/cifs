@@ -23,7 +23,15 @@ jobs:
   build-push-ansible-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.6
+      - uses: actions/checkout@v5
+
+      - name: Checkout deamen/ansible repo
+        uses: actions/checkout@v5
+        with:
+          repository: deamen/ansible
+          token: ${{ secrets.ANSIBLE_CIFS_PAT }}
+          path: ansible
+          ref: master
 
       - name: Setup buildah
         uses: deamen/gh-actions/setup-buildah@master
