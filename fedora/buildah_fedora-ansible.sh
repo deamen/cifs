@@ -26,8 +26,13 @@ buildah run "$ctr" chmod 0440 /etc/sudoers.d/${MAINTAINER}
 buildah config --user ${MAINTAINER} "$ctr"
 buildah config --workingdir /home/${MAINTAINER} "$ctr"
 
+# Fix sudo PAM account management for container environments (e.g. GitHub Actions)
+buildah run --user root "$ctr" sh -c 'printf "#%%PAM-1.0\nauth       include      system-auth\naccount    sufficient   pam_permit.so\nsession    optional     pam_keyinit.so revoke\nsession    required     pam_limits.so\n" > /etc/pam.d/sudo'
+
+echo "Preparing Ansible project in the container..."
 prepare_ansible_project_in_container "$ctr"
 
+echo "Running Ansible playbooks to configure the container..."
 buildah run "$ctr" sh -c "source /etc/profile.d/user_home_local_bin.sh && cd Prj/ansible && ansible-playbook -i localhost, playbooks/configure_ansible_development_env.yml --limit localhost --connection local"
 
 buildah run "$ctr" rm -rf /home/${MAINTAINER}/Prj/ansible
