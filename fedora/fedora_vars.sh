@@ -2,7 +2,7 @@ prepare_ansible_project_in_container() {
     local ctr="$1"
     buildah run "$ctr" mkdir -p /home/${MAINTAINER}/Prj
     buildah copy "$ctr" ../ansible /home/${MAINTAINER}/Prj/ansible
-    buildah run "$ctr" sh -c "sudo chown -R ${MAINTAINER}:${MAINTAINER} /home/${MAINTAINER}/Prj/ansible"
+    buildah run --user root "$ctr" sh -c "chown -R ${MAINTAINER}:${MAINTAINER} /home/${MAINTAINER}/Prj/ansible"
     buildah run "$ctr" ansible-galaxy collection install -r /home/${MAINTAINER}/Prj/ansible/requirements.yml
 }
 ARCH=${ARCH:-amd64}
